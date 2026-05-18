@@ -23,6 +23,8 @@ developer defaults.
 - `install.sh` - profile-aware, backup-aware installer
 - `uninstall.sh` - restore latest backups
 - `verify.sh` - syntax checks for the repo
+- `Makefile` - short commands for install, rollback, and verification
+- `.editorconfig` - consistent formatting defaults
 
 Legacy single-profile files are kept for compatibility:
 
@@ -32,16 +34,49 @@ Legacy single-profile files are kept for compatibility:
 
 ## Install
 
-Preview changes:
-
-```sh
-./install.sh --dry-run
-```
-
-Auto-detect Linux or macOS:
+Quick install:
 
 ```sh
 ./install.sh
+```
+
+Best first-time install on a new machine:
+
+```sh
+./install.sh --install-deps --bootstrap --set-shell
+```
+
+Equivalent Make targets:
+
+```sh
+make install
+make install-full
+```
+
+Check your machine first:
+
+```sh
+./install.sh --check
+make check
+```
+
+Install recommended dependencies, then install this config:
+
+```sh
+./install.sh --install-deps
+```
+
+Install Oh My Zsh, Powerlevel10k, and Zsh plugins:
+
+```sh
+./install.sh --bootstrap
+```
+
+Preview file changes without writing anything:
+
+```sh
+./install.sh --dry-run
+make dry-run
 ```
 
 Choose explicitly:
@@ -51,7 +86,11 @@ Choose explicitly:
 ./install.sh macos
 ```
 
-The installer backs up existing files with a timestamp before replacing them.
+The installer auto-detects Linux or macOS, checks required commands, shows
+package-manager and shell-bootstrap commands for missing tools, verifies repo
+syntax, checks the installed `~/.zshrc`, and backs up existing files with a
+timestamp before replacing them. Re-running the installer skips files that are
+already up to date.
 
 ## Update
 
@@ -64,6 +103,18 @@ git pull
 
 ```sh
 ./uninstall.sh
+```
+
+Preview rollback:
+
+```sh
+./uninstall.sh --dry-run
+```
+
+Restore backups and remove shared customizecmd files:
+
+```sh
+./uninstall.sh --remove-config
 ```
 
 This restores the newest backups for:
@@ -112,4 +163,5 @@ are expected to exist in the standard Oh My Zsh custom directories.
 
 ```sh
 ./verify.sh
+make verify
 ```
