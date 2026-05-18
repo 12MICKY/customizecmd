@@ -12,4 +12,11 @@ zsh -n shell/functions.zsh
 sh -n install.sh
 sh -n uninstall.sh
 
+./install.sh --dry-run --no-verify >/dev/null 2>&1
+./uninstall.sh --dry-run >/dev/null 2>&1
+
+if command -v shellcheck >/dev/null 2>&1; then
+  shellcheck install.sh uninstall.sh verify.sh
+fi
+
 printf 'verify ok\n'
