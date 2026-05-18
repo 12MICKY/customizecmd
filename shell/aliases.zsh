@@ -48,7 +48,8 @@ alias ni="npm install"
 alias nr="npm run"
 alias nd="npm run dev"
 alias nb="npm run build"
-alias nt="npm test"
+unalias nt 2>/dev/null
+alias ntest="npm test"
 alias nx="npx"
 
 # Python
@@ -60,6 +61,7 @@ alias pipup="python3 -m pip install --upgrade pip"
 # System
 alias now="date '+%Y-%m-%d %H:%M:%S %Z'"
 alias dfh="df -h"
+unalias myip ip ipa 2>/dev/null
 
 case "$(uname -s)" in
   Darwin)
