@@ -27,3 +27,4 @@ extract() {
   esac
 }
 
+[[ -r "$HOME/.config/network-tools/network-tools.zsh" ]] && source "$HOME/.config/network-tools/network-tools.zsh"
