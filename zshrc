@@ -192,93 +192,10 @@ if command -v fzf >/dev/null 2>&1; then
   source <(fzf --zsh)
 fi
 
-alias wine="/usr/bin/wine"
-alias arduino="~/Downloads/arduino-ide_2.3.8_Linux_64bit.AppImage --no-sandbox"
-
-if command -v eza >/dev/null 2>&1; then
-  alias ls="eza --icons --group-directories-first"
-  alias ll="eza -lah --icons --group-directories-first --git"
-  alias la="eza -la --icons --group-directories-first"
-  alias tree="eza --tree --icons --group-directories-first"
-else
-  alias ll="ls -lah"
-  alias la="ls -la"
-fi
-
-alias c="clear"
-alias ..="cd .."
-alias ...="cd ../.."
-alias ....="cd ../../.."
-alias mkdirp="mkdir -p"
-alias path='print -l $path'
-alias h="history 1"
-alias j="jobs -l"
-alias reload="source ~/.zshrc"
-alias zshconfig="$EDITOR ~/.zshrc"
-
-alias gs="git status --short --branch"
-alias ga="git add"
-alias gaa="git add --all"
-alias gc="git commit"
-alias gcm="git commit -m"
-alias gca="git commit --amend"
-alias gp="git push"
-alias gpf="git push --force-with-lease"
-alias gl="git pull --rebase --autostash"
-alias gd="git diff"
-alias gds="git diff --staged"
-alias gco="git checkout"
-alias gcb="git checkout -b"
-alias gb="git branch --sort=-committerdate"
-alias glog="git log --oneline --decorate --graph --all -20"
-alias lg="lazygit"
-
-alias ni="npm install"
-alias nr="npm run"
-alias nd="npm run dev"
-alias nb="npm run build"
-alias nt="npm test"
-alias nx="npx"
-
-alias py="python3"
-alias venv="python3 -m venv .venv"
-alias va="source .venv/bin/activate"
-alias pipup="python3 -m pip install --upgrade pip"
-
-alias ports="ss -tulpn"
-alias myip="hostname -I | awk '{print \$1}'"
-alias now="date '+%Y-%m-%d %H:%M:%S %Z'"
-alias dfh="df -h"
-alias mem="free -h"
-
-mkcd() {
-  mkdir -p "$1" && cd "$1"
-}
-
-extract() {
-  [[ -f "$1" ]] || { echo "extract: file not found: $1" >&2; return 1; }
-  case "$1" in
-    *.tar.bz2) tar xjf "$1" ;;
-    *.tar.gz)  tar xzf "$1" ;;
-    *.tar.xz)  tar xJf "$1" ;;
-    *.tar)     tar xf "$1" ;;
-    *.tbz2)    tar xjf "$1" ;;
-    *.tgz)     tar xzf "$1" ;;
-    *.zip)     unzip "$1" ;;
-    *.rar)     unrar x "$1" ;;
-    *.7z)      7z x "$1" ;;
-    *)         echo "extract: unsupported archive: $1" >&2; return 1 ;;
-  esac
-}
-
-serve() {
-  local port="${1:-8000}"
-  python3 -m http.server "$port"
-}
-
-take() {
-  mkcd "$1"
-}
+for file in "$HOME"/.config/customizecmd/*.zsh; do
+  [[ -r "$file" ]] && source "$file"
+done
+unset file
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
