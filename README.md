@@ -16,4 +16,3 @@ Minimal Ubuntu-style Zsh setup for daily development.
 ```
 
 The installer backs up existing files before replacing them.
-
