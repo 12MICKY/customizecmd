@@ -1,83 +1,12 @@
 typeset -g POWERLEVEL9K_INSTANT_PROMPT=off
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
-# Initialization code that may require console input (password prompts, [y/n]
-# confirmations, etc.) must go above this block; everything else may go below.
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-# If you come from bash you might have to change your $PATH.
-# export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
-
-# Path to your Oh My Zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
-
-# Set name of the theme to load --- if set to "random", it will
-# load a random theme each time Oh My Zsh is loaded, in which case,
-# to know which specific one was loaded, run: echo $RANDOM_THEME
-# See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
 ZSH_THEME="powerlevel10k/powerlevel10k"
 
-# Set list of themes to pick from when loading at random
-# Setting this variable when ZSH_THEME="powerlevel10k/powerlevel10k"
-# a theme from this variable instead of looking in $ZSH/themes/
-# If set to an empty array, this variable will have no effect.
-# ZSH_THEME_RANDOM_CANDIDATES=( "robbyrussell" "agnoster" )
-
-# Uncomment the following line to use case-sensitive completion.
-# CASE_SENSITIVE="true"
-
-# Uncomment the following line to use hyphen-insensitive completion.
-# Case-sensitive completion must be off. _ and - will be interchangeable.
-# HYPHEN_INSENSITIVE="true"
-
-# Uncomment one of the following lines to change the auto-update behavior
-# zstyle ':omz:update' mode disabled  # disable automatic updates
-# zstyle ':omz:update' mode auto      # update automatically without asking
-# zstyle ':omz:update' mode reminder  # just remind me to update when it's time
-
-# Uncomment the following line to change how often to auto-update (in days).
-# zstyle ':omz:update' frequency 13
-
-# Uncomment the following line if pasting URLs and other text is messed up.
-# DISABLE_MAGIC_FUNCTIONS="true"
-
-# Uncomment the following line to disable colors in ls.
-# DISABLE_LS_COLORS="true"
-
-# Uncomment the following line to disable auto-setting terminal title.
-# DISABLE_AUTO_TITLE="true"
-
-# Uncomment the following line to enable command auto-correction.
-# ENABLE_CORRECTION="true"
-
-# Uncomment the following line to display red dots whilst waiting for completion.
-# You can also set it to another string to have that shown instead of the default red dots.
-# e.g. COMPLETION_WAITING_DOTS="%F{yellow}waiting...%f"
-# Caution: this setting can cause issues with multiline prompts in zsh < 5.7.1 (see #5765)
-# COMPLETION_WAITING_DOTS="true"
-
-# Uncomment the following line if you want to disable marking untracked files
-# under VCS as dirty. This makes repository status check for large repositories
-# much, much faster.
-# DISABLE_UNTRACKED_FILES_DIRTY="true"
-
-# Uncomment the following line if you want to change the command execution time
-# stamp shown in the history command output.
-# You can set one of the optional three formats:
-# "mm/dd/yyyy"|"dd.mm.yyyy"|"yyyy-mm-dd"
-# or set a custom format using the strftime function format specifications,
-# see 'man strftime' for details.
-# HIST_STAMPS="mm/dd/yyyy"
-
-# Would you like to use another custom folder than $ZSH/custom?
-# ZSH_CUSTOM=/path/to/new-custom-folder
-
-# Which plugins would you like to load?
-# Standard plugins can be found in $ZSH/plugins/
-# Custom plugins may be added to $ZSH_CUSTOM/plugins/
-# Example format: plugins=(rails git textmate ruby lighthouse)
-# Add wisely, as too many plugins slow down shell startup.
 plugins=(
   git
   npm
@@ -93,201 +22,71 @@ for plugin in zsh-autosuggestions history-substring-search zsh-syntax-highlighti
   fi
 done
 
-if [[ -r "$ZSH/oh-my-zsh.sh" ]]; then
-  source "$ZSH/oh-my-zsh.sh"
-fi
+[[ -r "$ZSH/oh-my-zsh.sh" ]] && source "$ZSH/oh-my-zsh.sh"
 
-# User configuration
-
-# export MANPATH="/usr/local/man:$MANPATH"
-
-# You may need to manually set your language environment
-# export LANG=en_US.UTF-8
-
-# Preferred editor for local and remote sessions
-# if [[ -n $SSH_CONNECTION ]]; then
-#   export EDITOR='vim'
-# else
-#   export EDITOR='nvim'
-# fi
-
-# Compilation flags
-# export ARCHFLAGS="-arch $(uname -m)"
-
-# Set personal aliases, overriding those provided by Oh My Zsh libs,
-# plugins, and themes. Aliases can be placed here, though Oh My Zsh
-# users are encouraged to define aliases within a top-level file in
-# the $ZSH_CUSTOM folder, with .zsh extension. Examples:
-# - $ZSH_CUSTOM/aliases.zsh
-# - $ZSH_CUSTOM/macos.zsh
-# For a full list of active aliases, run `alias`.
-#
-# Example aliases
-# alias zshconfig="mate ~/.zshrc"
-# alias ohmyzsh="mate ~/.oh-my-zsh"
-DEFAULT_USER="${USER}"
-
-# ---- Dev shell defaults -------------------------------------------------
+# ── Environment ─────────────────────────────────────────────────────────────
 export EDITOR="${EDITOR:-code --wait}"
 export VISUAL="${VISUAL:-$EDITOR}"
 export PAGER="${PAGER:-less}"
 export LESS="-RFX"
 export LANG="${LANG:-en_US.UTF-8}"
 export LC_ALL="${LC_ALL:-en_US.UTF-8}"
+DEFAULT_USER="${USER}"
 
 typeset -U path PATH
 path=(
   "$HOME/.local/bin"
   "$HOME/go/bin"
-  "$HOME/.lmstudio/bin"
   $path
 )
 
+# ── History ──────────────────────────────────────────────────────────────────
 HISTFILE="$HOME/.zsh_history"
 HISTSIZE=200000
 SAVEHIST=200000
 WORDCHARS=''
-setopt appendhistory
-setopt sharehistory
-setopt hist_ignore_dups
-setopt hist_ignore_all_dups
-setopt hist_reduce_blanks
-setopt hist_verify
-setopt inc_append_history
-setopt auto_cd
-setopt auto_pushd
-setopt pushd_ignore_dups
-setopt interactive_comments
-setopt auto_menu
-setopt complete_in_word
-setopt always_to_end
-setopt auto_param_slash
+setopt appendhistory sharehistory hist_ignore_dups hist_ignore_all_dups
+setopt hist_reduce_blanks hist_verify inc_append_history
 
+# ── Directory ────────────────────────────────────────────────────────────────
+setopt auto_cd auto_pushd pushd_ignore_dups
+
+# ── Completion ───────────────────────────────────────────────────────────────
+setopt auto_menu complete_in_word always_to_end auto_param_slash interactive_comments
 zstyle ':completion:*' menu select
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*'
 [[ -n "${LS_COLORS:-}" ]] && zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 zstyle ':completion:*' group-name ''
 zstyle ':completion:*:descriptions' format '%F{yellow}%d%f'
-zstyle ':completion:*:messages' format '%F{purple}%d%f'
-zstyle ':completion:*:warnings' format '%F{red}no matches%f'
+zstyle ':completion:*:warnings'     format '%F{red}no matches%f'
 
+# ── Autosuggestions ──────────────────────────────────────────────────────────
 ZSH_AUTOSUGGEST_STRATEGY=(history completion)
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=244'
 
+# ── Key bindings ─────────────────────────────────────────────────────────────
 bindkey -e
-bindkey '^R' history-incremental-search-backward
-bindkey '^[[A' history-substring-search-up 2>/dev/null
-bindkey '^[[B' history-substring-search-down 2>/dev/null
-bindkey '^[[1;5D' backward-word
-bindkey '^[[1;5C' forward-word
-bindkey '^[[3~' delete-char
-bindkey '^[[H' beginning-of-line
-bindkey '^[[F' end-of-line
-bindkey '^ ' autosuggest-accept 2>/dev/null
+bindkey '^R'       history-incremental-search-backward
+bindkey '^[[A'     history-substring-search-up   2>/dev/null
+bindkey '^[[B'     history-substring-search-down 2>/dev/null
+bindkey '^[[1;5D'  backward-word
+bindkey '^[[1;5C'  forward-word
+bindkey '^[[3~'    delete-char
+bindkey '^[[H'     beginning-of-line
+bindkey '^[[F'     end-of-line
+bindkey '^ '       autosuggest-accept 2>/dev/null
 
+# ── Tools ────────────────────────────────────────────────────────────────────
 export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
-[ -s "$NVM_DIR/bash_completion" ] && . "$NVM_DIR/bash_completion"
+[[ -s "$NVM_DIR/nvm.sh" ]]          && source "$NVM_DIR/nvm.sh"
+[[ -s "$NVM_DIR/bash_completion" ]] && source "$NVM_DIR/bash_completion"
 
-if command -v zoxide >/dev/null 2>&1; then
-  eval "$(zoxide init zsh)"
-fi
+command -v zoxide >/dev/null 2>&1 && eval "$(zoxide init zsh)"
+command -v fzf    >/dev/null 2>&1 && source <(fzf --zsh)
 
-if command -v fzf >/dev/null 2>&1; then
-  source <(fzf --zsh)
-fi
-
-alias wine="/usr/bin/wine"
-alias arduino="~/Downloads/arduino-ide_2.3.8_Linux_64bit.AppImage --no-sandbox"
-
-if command -v eza >/dev/null 2>&1; then
-  alias ls="eza --icons --group-directories-first"
-  alias ll="eza -lah --icons --group-directories-first --git"
-  alias la="eza -la --icons --group-directories-first"
-  alias tree="eza --tree --icons --group-directories-first"
-else
-  alias ll="ls -lah"
-  alias la="ls -la"
-fi
-
-alias c="clear"
-alias ..="cd .."
-alias ...="cd ../.."
-alias ....="cd ../../.."
-alias mkdirp="mkdir -p"
-alias path='print -l $path'
-alias h="history 1"
-alias j="jobs -l"
-alias reload="source ~/.zshrc"
-alias zshconfig="$EDITOR ~/.zshrc"
-
-alias gs="git status --short --branch"
-alias ga="git add"
-alias gaa="git add --all"
-alias gc="git commit"
-alias gcm="git commit -m"
-alias gca="git commit --amend"
-alias gp="git push"
-alias gpf="git push --force-with-lease"
-alias gl="git pull --rebase --autostash"
-alias gd="git diff"
-alias gds="git diff --staged"
-alias gco="git checkout"
-alias gcb="git checkout -b"
-alias gb="git branch --sort=-committerdate"
-alias glog="git log --oneline --decorate --graph --all -20"
-alias lg="lazygit"
-
-alias ni="npm install"
-alias nr="npm run"
-alias nd="npm run dev"
-alias nb="npm run build"
-alias ntest="npm test"
-alias nx="npx"
-
-alias py="python3"
-alias venv="python3 -m venv .venv"
-alias va="source .venv/bin/activate"
-alias pipup="python3 -m pip install --upgrade pip"
-
-alias ports="ss -tulpn"
-alias myip="hostname -I | awk '{print \$1}'"
-alias now="date '+%Y-%m-%d %H:%M:%S %Z'"
-alias dfh="df -h"
-alias mem="free -h"
-
-mkcd() {
-  mkdir -p "$1" && cd "$1"
-}
-
-extract() {
-  [[ -f "$1" ]] || { echo "extract: file not found: $1" >&2; return 1; }
-  case "$1" in
-    *.tar.bz2) tar xjf "$1" ;;
-    *.tar.gz)  tar xzf "$1" ;;
-    *.tar.xz)  tar xJf "$1" ;;
-    *.tar)     tar xf "$1" ;;
-    *.tbz2)    tar xjf "$1" ;;
-    *.tgz)     tar xzf "$1" ;;
-    *.zip)     unzip "$1" ;;
-    *.rar)     unrar x "$1" ;;
-    *.7z)      7z x "$1" ;;
-    *)         echo "extract: unsupported archive: $1" >&2; return 1 ;;
-  esac
-}
-
-serve() {
-  local port="${1:-8000}"
-  python3 -m http.server "$port"
-}
-
-take() {
-  mkcd "$1"
-}
-
+# ── Custom shell files ────────────────────────────────────────────────────────
 for file in "$HOME"/.config/customizecmd/*.zsh(N); do
   source "$file"
 done
 
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh

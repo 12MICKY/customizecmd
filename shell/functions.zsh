@@ -27,4 +27,26 @@ extract() {
   esac
 }
 
+sshcp() {
+  ssh-copy-id -i "${2:-$HOME/.ssh/id_ed25519.pub}" "$1"
+}
+
+port() {
+  local p="${1:?usage: port <number>}"
+  ss -tulpn | grep ":$p "
+}
+
+certcheck() {
+  echo | openssl s_client -connect "${1:?usage: certcheck host:port}" 2>/dev/null \
+    | openssl x509 -noout -subject -dates
+}
+
+dlog() {
+  docker logs --tail="${2:-100}" -f "${1:?usage: dlog <container> [lines]}"
+}
+
+dsh() {
+  docker exec -it "${1:?usage: dsh <container>}" "${2:-sh}"
+}
+
 [[ -r "$HOME/.config/network-tools/network-tools.zsh" ]] && source "$HOME/.config/network-tools/network-tools.zsh"
