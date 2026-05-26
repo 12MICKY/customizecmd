@@ -23,8 +23,7 @@ jobs:
         run: echo "sha=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
 
       - name: Setup verify deps
-        run: |
-          apt-get install -y zsh shellcheck 2>/dev/null || true
+        run: apt-get install -y zsh 2>/dev/null || true
 
       - name: Verify syntax
         run: make verify
