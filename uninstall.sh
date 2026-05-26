@@ -47,6 +47,7 @@ done
 
 restore_latest_backup() {
   dest="$1"
+  # shellcheck disable=SC2012
   latest="$(ls -t "$dest".backup.* 2>/dev/null | head -n 1 || true)"
 
   if [ -z "$latest" ]; then
