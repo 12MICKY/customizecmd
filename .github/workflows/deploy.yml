@@ -33,7 +33,7 @@ jobs:
           HOME: /home/thiraphat
         run: |
           chmod +x install.sh
-          ./install.sh --force
+          ./install.sh linux-server --force
           chown -R 1000:1000 /home/thiraphat/.zshrc \
             /home/thiraphat/.p10k.zsh \
             /home/thiraphat/.config/zsh \
