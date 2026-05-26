@@ -9,9 +9,9 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 
 plugins=(
   git
-  npm
-  node
   docker
+  docker-compose
+  systemd
   colored-man-pages
   command-not-found
 )
@@ -24,8 +24,8 @@ done
 
 [[ -r "$ZSH/oh-my-zsh.sh" ]] && source "$ZSH/oh-my-zsh.sh"
 
-# ── Environment ─────────────────────────────────────────────────────────────
-export EDITOR="${EDITOR:-code --wait}"
+# ── Environment ──────────────────────────────────────────────────────────────
+export EDITOR="${EDITOR:-vim}"
 export VISUAL="${VISUAL:-$EDITOR}"
 export PAGER="${PAGER:-less}"
 export LESS="-RFX"
@@ -77,10 +77,6 @@ bindkey '^[[F'     end-of-line
 bindkey '^ '       autosuggest-accept 2>/dev/null
 
 # ── Tools ────────────────────────────────────────────────────────────────────
-export NVM_DIR="$HOME/.nvm"
-[[ -s "$NVM_DIR/nvm.sh" ]]          && source "$NVM_DIR/nvm.sh"
-[[ -s "$NVM_DIR/bash_completion" ]] && source "$NVM_DIR/bash_completion"
-
 command -v zoxide >/dev/null 2>&1 && eval "$(zoxide init zsh)"
 command -v fzf    >/dev/null 2>&1 && source <(fzf --zsh)
 

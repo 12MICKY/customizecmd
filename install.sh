@@ -14,12 +14,13 @@ stamp="$(date +%Y%m%d-%H%M%S)"
 
 usage() {
   cat <<'EOF'
-Usage: ./install.sh [auto|linux|macos] [options]
+Usage: ./install.sh [auto|linux|linux-server|macos] [options]
 
 Profiles:
-  auto     Detect Linux or macOS automatically.
-  linux    Install Ubuntu/Linux-flavored config.
-  macos    Install macOS-flavored config.
+  auto          Detect Linux or macOS automatically (defaults to linux).
+  linux         Ubuntu/Linux desktop config.
+  linux-server  Linux server config (server icon, always-on context, teal theme).
+  macos         macOS config.
 
 Options:
   --dry-run       Show what would change without writing files.
@@ -73,7 +74,7 @@ detect_profile() {
 
 recommended_packages() {
   case "$profile" in
-    linux) printf '%s\n' 'zsh git curl eza zoxide fzf tmux gh' ;;
+    linux|linux-server) printf '%s\n' 'zsh git curl eza zoxide fzf tmux gh' ;;
     macos) printf '%s\n' 'powerlevel10k zsh-autosuggestions zsh-syntax-highlighting zsh-history-substring-search zoxide fzf lazygit eza' ;;
   esac
 }
@@ -95,7 +96,7 @@ clone_or_update() {
 
 dependency_hint() {
   case "$profile" in
-    linux)
+    linux|linux-server)
       if command_exists apt; then
         printf 'sudo apt update && sudo apt install -y %s\n' "$(recommended_packages)"
       elif command_exists dnf; then
@@ -120,7 +121,7 @@ install_dependencies() {
   section "Installing recommended dependencies"
 
   case "$profile" in
-    linux)
+    linux|linux-server)
       if command_exists apt; then
         run sudo apt update
         # shellcheck disable=SC2046
@@ -157,7 +158,7 @@ bootstrap_shell_tools() {
   fi
 
   case "$profile" in
-    linux)
+    linux|linux-server)
       clone_or_update "https://github.com/ohmyzsh/ohmyzsh.git" "$HOME/.oh-my-zsh"
       run mkdir -p "$HOME/.oh-my-zsh/custom/themes" "$HOME/.oh-my-zsh/custom/plugins"
       clone_or_update "https://github.com/romkatv/powerlevel10k.git" "$HOME/.oh-my-zsh/custom/themes/powerlevel10k"
@@ -223,7 +224,7 @@ check_dependencies() {
     missing_optional="$missing_optional brew"
   fi
 
-  if [ "$profile" = "linux" ]; then
+  if [ "$profile" = "linux" ] || [ "$profile" = "linux-server" ]; then
     [ -r "$HOME/.oh-my-zsh/oh-my-zsh.sh" ] || missing_optional="$missing_optional oh-my-zsh"
     [ -d "$HOME/.oh-my-zsh/custom/themes/powerlevel10k" ] || missing_optional="$missing_optional powerlevel10k"
     [ -d "$HOME/.oh-my-zsh/custom/plugins/zsh-autosuggestions" ] || missing_optional="$missing_optional zsh-autosuggestions"
@@ -243,7 +244,7 @@ check_dependencies() {
   if [ -n "$missing_optional" ]; then
     warn "missing optional commands:$missing_optional"
     printf 'Suggested install command:\n  %s\n' "$(dependency_hint)"
-    if [ "$profile" = "linux" ]; then
+    if [ "$profile" = "linux" ] || [ "$profile" = "linux-server" ]; then
       printf 'Suggested shell bootstrap:\n  ./install.sh --bootstrap\n'
     fi
   else
@@ -253,7 +254,7 @@ check_dependencies() {
 
 while [ "$#" -gt 0 ]; do
   case "$1" in
-    auto|linux|macos) profile="$1" ;;
+    auto|linux|linux-server|macos) profile="$1" ;;
     --dry-run) dry_run=1 ;;
     --check) check_only=1 ;;
     --install-deps) install_deps=1 ;;

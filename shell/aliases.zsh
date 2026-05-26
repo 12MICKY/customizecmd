@@ -58,9 +58,22 @@ alias venv="python3 -m venv .venv"
 alias va="source .venv/bin/activate"
 alias pipup="python3 -m pip install --upgrade pip"
 
+# Docker
+alias d="docker"
+alias dc="docker compose"
+alias dcu="docker compose up -d"
+alias dcd="docker compose down"
+alias dcl="docker compose logs -f"
+alias dps="docker ps --format 'table {{.Names}}\t{{.Status}}\t{{.Ports}}'"
+alias dex="docker exec -it"
+alias dprune="docker system prune -af --volumes"
+
 # System
 alias now="date '+%Y-%m-%d %H:%M:%S %Z'"
 alias dfh="df -h"
+alias duh="du -sh * 2>/dev/null | sort -h"
+alias topcpu="ps aux --sort=-%cpu | head -10"
+alias topmem="ps aux --sort=-%mem | head -10"
 unalias myip ip ipa 2>/dev/null
 
 case "$(uname -s)" in

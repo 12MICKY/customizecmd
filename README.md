@@ -1,163 +1,180 @@
 # customizecmd
 
-Minimal Zsh setup for daily development with separate Linux and macOS profiles.
+Zsh setup for daily development and server work. Three profiles: Linux desktop,
+Linux server, and macOS. Each shares the same shell functions and aliases while
+keeping a prompt style that fits the context.
 
-This repo keeps the prompt clean while improving the parts you use all day:
-history search, completion, Git shortcuts, project navigation, and sensible
-developer defaults.
+## Profiles
 
-## Preview
+| Profile | Use case | Prompt style |
+|---|---|---|
+| `linux` | Ubuntu desktop | Ubuntu icon, orange, context hidden when local |
+| `linux-server` | Linux server / SSH | Server icon, teal, user@host always visible |
+| `macos` | macOS | macOS-style, Homebrew tools |
 
-- Ubuntu-orange Powerlevel10k prompt on Linux
-- macOS-style Powerlevel10k prompt on macOS
-- Clean right prompt: status, long command time, jobs, venv, time
-- Compact time format: `HH:MM`
-- Git status in the prompt without noisy language/runtime versions
+## Prompt features
 
-## Includes
+**linux-server**
+- Left: ` user@host  ~/path  branch`
+- Right: `✘ 1  5s  14:32` (errors + slow commands + time; right side hidden on success)
+- Filler `─` connects left and right
+- Context always visible — useful when jumping between machines
 
-- `zshrc.linux`, `p10k.linux.zsh`, `gitconfig.linux`
-- `zshrc.macos`, `p10k.macos.zsh`, `gitconfig.macos`
-- `shell/aliases.zsh` - daily command shortcuts
-- `shell/functions.zsh` - helpers such as `mkcd`, `take`, `serve`, and `extract`
-- `install.sh` - profile-aware, backup-aware installer
-- `uninstall.sh` - restore latest backups
-- `verify.sh` - syntax checks for the repo
-- `Makefile` - short commands for install, rollback, and verification
-- `.editorconfig` - consistent formatting defaults
-
-Legacy single-profile files are kept for compatibility:
-
-- `zshrc`
-- `p10k.zsh`
-- `gitconfig`
+**linux (desktop)**
+- Left: ` ~/path  branch`
+- Right: `✔  5s  14:32`
+- Context shown only on SSH or with privileges
 
 ## Install
 
-Quick install:
+New machine (full setup):
 
 ```sh
-./install.sh
+git clone https://github.com/12MICKY/customizecmd.git
+cd customizecmd
+./install.sh --install-deps --bootstrap --set-shell        # desktop
+./install.sh linux-server --install-deps --bootstrap --set-shell  # server
 ```
 
-Best first-time install on a new machine:
+Make shortcuts:
 
 ```sh
-./install.sh --install-deps --bootstrap --set-shell
+make install         # auto-detect linux or macos
+make install-server  # linux-server profile
+make install-full    # desktop with deps + bootstrap + set shell
 ```
 
-Equivalent Make targets:
+Quick install (deps already present):
 
 ```sh
-make install
-make install-full
+./install.sh              # auto-detect
+./install.sh linux
+./install.sh linux-server
+./install.sh macos
 ```
 
-Check your machine first:
-
-```sh
-./install.sh --check
-make check
-```
-
-Install recommended dependencies, then install this config:
-
-```sh
-./install.sh --install-deps
-```
-
-Install Oh My Zsh, Powerlevel10k, and Zsh plugins:
-
-```sh
-./install.sh --bootstrap
-```
-
-Preview file changes without writing anything:
+Preview changes without writing anything:
 
 ```sh
 ./install.sh --dry-run
 make dry-run
 ```
 
-Choose explicitly:
+Check this machine:
 
 ```sh
-./install.sh linux
-./install.sh macos
+./install.sh --check
+make check
 ```
-
-The installer auto-detects Linux or macOS, checks required commands, shows
-package-manager and shell-bootstrap commands for missing tools, verifies repo
-syntax, checks the installed `~/.zshrc`, and backs up existing files with a
-timestamp before replacing them. Re-running the installer skips files that are
-already up to date.
 
 ## Update
 
 ```sh
-git pull
-./install.sh
+git pull && ./install.sh
 ```
 
-## Roll Back
+## Roll back
 
 ```sh
-./uninstall.sh
+./uninstall.sh               # restore latest backups
+./uninstall.sh --remove-config  # also remove ~/.config/customizecmd
 ```
 
-Preview rollback:
+## Packages
 
+**Linux** (`apt`):
 ```sh
-./uninstall.sh --dry-run
+sudo apt install zsh git curl eza zoxide fzf tmux gh
 ```
 
-Restore backups and remove shared customizecmd files:
-
+**macOS** (`brew`):
 ```sh
-./uninstall.sh --remove-config
+brew install powerlevel10k zsh-autosuggestions zsh-syntax-highlighting \
+             zsh-history-substring-search zoxide fzf lazygit eza
 ```
 
-This restores the newest backups for:
+Oh My Zsh, Powerlevel10k, and plugins are expected in the standard
+`~/.oh-my-zsh/custom/` directories. Use `--bootstrap` to install them.
 
-- `~/.zshrc`
-- `~/.p10k.zsh`
-- `~/.gitconfig`
+## Shell shortcuts
 
-## Recommended Linux Packages
+### Navigation
+| Alias | Command |
+|---|---|
+| `c` | clear |
+| `..` `...` | cd up 1/2 levels |
+| `take <dir>` | mkdir + cd |
+| `h` | full history |
+| `reload` | source ~/.zshrc |
 
-```sh
-sudo apt install zsh git eza zoxide fzf tmux gh
-```
+### Git
+| Alias | Command |
+|---|---|
+| `gs` | git status --short --branch |
+| `ga` / `gaa` | git add / add --all |
+| `gcm "msg"` | git commit -m |
+| `gp` / `gpf` | push / push --force-with-lease |
+| `gl` | pull --rebase --autostash |
+| `gd` / `gds` | diff / diff --staged |
+| `gco` / `gcb` | checkout / checkout -b |
+| `glog` | compact commit graph |
+| `lg` | lazygit (if installed) |
 
-## Recommended macOS Packages
+### Docker
+| Alias | Command |
+|---|---|
+| `dps` | docker ps (formatted) |
+| `dcu` | docker compose up -d |
+| `dcd` | docker compose down |
+| `dcl` | docker compose logs -f |
+| `dex <name>` | docker exec -it |
+| `dprune` | remove all unused containers/images/volumes |
+| `dlog <name>` | tail container logs |
+| `dsh <name>` | shell into container |
 
-```sh
-brew install powerlevel10k zsh-autosuggestions zsh-syntax-highlighting zsh-history-substring-search zoxide fzf lazygit eza
-```
+### System
+| Alias | Command |
+|---|---|
+| `ports` | listening ports (ss -tulpn) |
+| `myip` | local IP |
+| `now` | current datetime |
+| `dfh` | df -h |
+| `duh` | du -sh sorted |
+| `mem` | free -h |
+| `topcpu` | top 10 by CPU |
+| `topmem` | top 10 by memory |
 
-Oh My Zsh, Powerlevel10k, `zsh-autosuggestions`, and `zsh-syntax-highlighting`
-are expected to exist in the standard Oh My Zsh custom directories.
+### Node
+| Alias | Command |
+|---|---|
+| `ni` / `nr` | npm install / npm run |
+| `nd` / `nb` | npm run dev / build |
 
-## Useful Shortcuts
+### Python
+| Alias | Command |
+|---|---|
+| `py` | python3 |
+| `venv` | python3 -m venv .venv |
+| `va` | source .venv/bin/activate |
 
-- `gs` - short Git status
-- `glog` - compact commit graph
-- `gl` - pull with rebase and autostash
-- `gpf` - push with force-with-lease
-- `nd` - `npm run dev`
-- `nb` - `npm run build`
-- `venv` - create `.venv`
-- `va` - activate `.venv`
-- `ports` - show listening ports
-- `take dir` - create and enter a directory
-- `serve 8000` - start a local static file server
+### Functions
+| Function | Usage |
+|---|---|
+| `mkcd <dir>` | mkdir + cd |
+| `extract <file>` | unpack any archive |
+| `serve [port]` | static file server (default 8000) |
+| `port <num>` | what's using this port |
+| `sshcp user@host` | ssh-copy-id shorthand |
+| `certcheck host:port` | show TLS cert expiry |
 
-## Key Bindings
+## Key bindings
 
-- `Ctrl+R` - search command history
-- `Up/Down` - search matching history by current input
-- `Ctrl+Left/Right` - move by word
-- `Ctrl+Space` - accept autosuggestion
+| Key | Action |
+|---|---|
+| `Ctrl+R` | fuzzy history search |
+| `↑` / `↓` | history search by current input |
+| `Ctrl+←/→` | move by word |
+| `Ctrl+Space` | accept autosuggestion |
 
 ## Verify
 
