@@ -1,6 +1,7 @@
 #!/usr/bin/env sh
 set -eu
 
+# shellcheck disable=SC1007
 repo_dir="$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)"
 profile="auto"
 dry_run=0
