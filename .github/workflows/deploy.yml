@@ -22,18 +22,23 @@ jobs:
         id: info
         run: echo "sha=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
 
+      - name: Setup verify deps
+        run: |
+          apt-get install -y zsh shellcheck 2>/dev/null || true
+
+      - name: Verify syntax
+        run: make verify
+
       - name: Install shell config
         env:
           HOME: /home/thiraphat
         run: |
           chmod +x install.sh
           ./install.sh --force
-          chown -R 1000:1000 /home/thiraphat/.zshrc /home/thiraphat/.p10k.zsh /home/thiraphat/.config/zsh 2>/dev/null || true
-
-      - name: Verify
-        env:
-          HOME: /home/thiraphat
-        run: make verify
+          chown -R 1000:1000 /home/thiraphat/.zshrc \
+            /home/thiraphat/.p10k.zsh \
+            /home/thiraphat/.config/zsh \
+            /home/thiraphat/.zshenv 2>/dev/null || true
 
       - name: Notify
         if: always()
