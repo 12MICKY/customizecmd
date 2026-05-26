@@ -7,18 +7,18 @@ on:
 
 jobs:
   deploy:
-    runs-on: [self-hosted, "${{ matrix.runner }}"]
-    timeout-minutes: 10
     strategy:
       matrix:
         runner: [node-34-custom, node-41-custom]
       fail-fast: false
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 10
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set build info
+      - name: Build info
         id: info
         run: echo "sha=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
 
@@ -37,11 +37,8 @@ jobs:
           CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: |
           STATUS="${{ job.status }}"
-          ICON=$([ "$STATUS" = "success" ] && echo "✅" || echo "❌")
+          ICON=$([ "$STATUS" = "success" ] && echo "\u2705" || echo "\u274c")
           curl -s -X POST "https://api.telegram.org/bot${BOT_TOKEN}/sendMessage" \
             -d chat_id="${CHAT_ID}" \
             -d parse_mode="Markdown" \
-            -d text="${ICON} *customizecmd* on ${{ matrix.runner }}
-Status: ${STATUS}
-Commit: \`${{ steps.info.outputs.sha }}\`
-By: ${{ github.actor }}"
+            -d text="${ICON} *customizecmd* - ${{ matrix.runner }} - ${STATUS} - ${{ steps.info.outputs.sha }}"
