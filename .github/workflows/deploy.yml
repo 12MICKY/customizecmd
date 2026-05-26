@@ -23,11 +23,16 @@ jobs:
         run: echo "sha=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
 
       - name: Install shell config
+        env:
+          HOME: /home/thiraphat
         run: |
           chmod +x install.sh
-          ./install.sh
+          ./install.sh --force
+          chown -R 1000:1000 /home/thiraphat/.zshrc /home/thiraphat/.p10k.zsh /home/thiraphat/.config/zsh 2>/dev/null || true
 
       - name: Verify
+        env:
+          HOME: /home/thiraphat
         run: make verify
 
       - name: Notify
@@ -37,7 +42,7 @@ jobs:
           CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: |
           STATUS="${{ job.status }}"
-          ICON=$([ "$STATUS" = "success" ] && echo "\u2705" || echo "\u274c")
+          ICON=$([ "$STATUS" = "success" ] && echo "✅" || echo "❌")
           curl -s -X POST "https://api.telegram.org/bot${BOT_TOKEN}/sendMessage" \
             -d chat_id="${CHAT_ID}" \
             -d parse_mode="Markdown" \
