@@ -12,10 +12,10 @@ alias zshconfig="$EDITOR ~/.zshrc"
 
 # Directory listing
 if command -v eza >/dev/null 2>&1; then
-  alias ls="eza --icons --group-directories-first"
-  alias ll="eza -lah --icons --group-directories-first --git"
-  alias la="eza -la --icons --group-directories-first"
-  alias tree="eza --tree --icons --group-directories-first"
+  alias ls="eza --icons --group-directories-first --sort=name"
+  alias ll="eza -lah --icons --group-directories-first --git --sort=name"
+  alias la="eza -la --icons --group-directories-first --sort=name"
+  alias tree="eza --tree --icons --group-directories-first --sort=name"
 else
   if [[ "$(uname -s)" == "Darwin" ]]; then
     alias ls="ls -G"
