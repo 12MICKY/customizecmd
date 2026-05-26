@@ -1,0 +1,27 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    strategy:
+      matrix:
+        runner: ['node-34-custom', 'node-41-custom']
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Deploy
+        run: ./install.sh
+
+      - name: Notify Telegram
+        if: always()
+        run: |
+          STATUS="${{ job.status }}"
+          ICON=$([ "$STATUS" = "success" ] && echo "✅" || echo "❌")
+          curl -s -X POST https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/sendMessage \
+            -d chat_id=${{ secrets.TELEGRAM_CHAT_ID }} \
+            -d text="$ICON ${{ github.repository }} deploy $STATUS (${{ github.actor }})"
